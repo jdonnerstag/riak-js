@@ -20,4 +20,4 @@ module.exports =
             'riakjs_flights'
           ] then assert.ok (bucket in buckets)
           
-}]
+  }]

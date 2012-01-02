@@ -5,13 +5,15 @@ api = process.env['RIAKJS_TEST_API'] or 'http'
 db = require('../src/index').getClient({ api: api, debug: false })
 client = require "./batch_#{api}"
 
+###
 process.on 'uncaughtException', (err) ->
     if (err.stack) 
         console.log err.stack
     else 
         console.log 'Caught exception: ' + err
-##    console.log "RIAK-JS Meta Data: " + util.inspect(err.riak, false, 1) if err.riak?
+    console.log "RIAK-JS Meta Data: " + util.inspect(err.riak, false, 1) if err.riak?
     process.exit
+###
 
 suite = vows.describe "Riak #{api.toUpperCase()} API"
 
