@@ -2,7 +2,7 @@ vows = require 'vows'
 util = require 'util'
 assert = require 'assert'
 api = process.env['RIAKJS_TEST_API'] or 'http'
-db = require('../src/index').getClient({ api: api, debug: false })
+db = require('../src/index').getClient({ api: api, debug: true, port: 8091 })
 client = require "./batch_#{api}"
 
 process.on 'uncaughtException', (err) ->
@@ -43,7 +43,7 @@ setupBatch =
         db.keys airports, @callback
       
       'data is present': (keys) ->
-        assert.length keys, 8
+        assert.lengthOf keys, 8
 
 batches = [{
   
@@ -203,7 +203,7 @@ batches = [{
     
     'returns the expected keys': (keys) ->
       [ams, other..., muc] = keys.sort()
-      assert.equal 8, keys.length
+      assert.lengthOf keys, 8
       assert.equal 'AMS', ams
       assert.equal 'MUC', muc
   
@@ -230,7 +230,7 @@ teardownBatch =
         db.keys airports, @callback
         
       'data is absent': (keys) ->
-        assert.length keys, 0
+        assert.equal keys.length, 0
 
 
 # add batches to suite in order

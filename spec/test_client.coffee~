@@ -2,18 +2,16 @@ vows = require 'vows'
 util = require 'util'
 assert = require 'assert'
 api = process.env['RIAKJS_TEST_API'] or 'http'
-db = require('../src/index').getClient({ api: api, debug: false })
+db = require('../src/index').getClient({ api: api, debug: false, port: 8091 })
 client = require "./batch_#{api}"
 
-###
 process.on 'uncaughtException', (err) ->
     if (err.stack) 
         console.log err.stack
     else 
         console.log 'Caught exception: ' + err
-    console.log "RIAK-JS Meta Data: " + util.inspect(err.riak, false, 1) if err.riak?
+##    console.log "RIAK-JS Meta Data: " + util.inspect(err.riak, false, 1) if err.riak?
     process.exit
-###
 
 suite = vows.describe "Riak #{api.toUpperCase()} API"
 
@@ -45,7 +43,7 @@ setupBatch =
         db.keys airports, @callback
       
       'data is present': (keys) ->
-        assert.length keys, 8
+        assert.equal keys.length, 8
 
 batches = [{
   
@@ -232,7 +230,7 @@ teardownBatch =
         db.keys airports, @callback
         
       'data is absent': (keys) ->
-        assert.length keys, 0
+        assert.equal keys.length, 0
 
 
 # add batches to suite in order

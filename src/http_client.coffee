@@ -2,6 +2,7 @@ Client = require './client'
 Meta = require './http_meta'
 Mapper = require './mapper'
 Utils = require './utils'
+util = require 'util'
 http = require 'http'
 { EventEmitter } = require 'events'
 
@@ -109,6 +110,7 @@ class HttpClient extends Client
   runJob: () ->
     [options, callback] = @ensure arguments
     options.raw or= 'mapred'
+    console.log "JDO: " + util.inspect(options, false, null)
     @save '', '', options.data, options, callback
 
   end: ->
