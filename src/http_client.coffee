@@ -313,7 +313,7 @@ class HttpClient extends Client
       msg += '\n  Caused by: ' + err.message
       err = new Error(msg)
       err.riak = meta
-      @emit 'RiakClientError', err
+      @emit 'clientError', err
       callback err
     
     request.end()
