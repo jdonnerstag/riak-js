@@ -306,7 +306,7 @@ class HttpClient extends Client
       delete meta.data
     
     request.on 'error', (err) =>
-      msg = 'Error while accessing RIAK server: ' + meta.method
+      msg = 'Failed to access RIAK server: ' + meta.method
       msg += ' ' + meta.api + '://'
       msg += meta.host + ':' + meta.port + '/' + meta.bucket + '/'
       msg += '/' + meta.key if meta.key?
