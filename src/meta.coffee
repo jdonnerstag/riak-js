@@ -23,7 +23,7 @@ class Meta
       new Buffer(data, 'binary')
     else
       switch @contentType
-        when "application/json" then JSON.parse data
+        when "application/json" then @decodeJSON data
         else data
 
   # Encodes a Javascript object into a Riak value, and from
@@ -46,7 +46,6 @@ class Meta
         if data instanceof Buffer
           @resolveType 'binary'
         else if typeof data is 'object'
-          json = JSON.stringify data
           @resolveType 'json'
         else
           @resolveType 'plain'
@@ -60,12 +59,18 @@ class Meta
     
     switch @contentType
       when "application/json"
-        json or JSON.stringify data  # in case it was already done
+        @encodeJSON data
       else
         if @binary?
           data
         else
           data.toString()
+
+  encodeJSON: (data) ->
+    return JSON.stringify data
+
+  decodeJSON: (data) ->
+    return JSON.parse data
 
   # calls encode on data
   encodeData: () ->

@@ -1,6 +1,15 @@
+#
+#
+#
+
 module.exports =
   
-  toJSON: (data) -> JSON.stringify data, (key, val) -> if typeof val is 'function' then val.toString() else val
+  toJSON: (data) -> 
+    JSON.stringify data, (key, val) -> 
+      return undefined if key == "_riak_vclock"
+      return val.toString() if val instanceof Function
+      return val.toString() if val instanceof RegExp 
+      return val
 
   parseMultipart: (data, boundary) ->
     
