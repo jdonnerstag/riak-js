@@ -66,11 +66,43 @@ class Meta
         else
           data.toString()
 
+  #
+  # Convert the Object to JSON. 
+  # 
+  # Users might provide their own implementation by providing a function with
+  # the same name as part of the 'options' object.
+  #
   encodeJSON: (data) ->
-    return JSON.stringify data
+    return JSON.stringify data, (key, value) ->
+      # Properly convert RegExp and Function
+      return value.toString() if value instanceof RegExp
+      return value.toString() if value instanceof Function
 
+      # No Change
+      return value
+
+  #
+  # Convert JSON to Object
+  # 
+  # Users might provide their own implementation by providing a function with
+  # the same name as part of the 'options' object.
+  #
   decodeJSON: (data) ->
-    return JSON.parse data
+    return JSON.parse data, (key, value) ->
+      if 'string' == typeof value
+        re = /\/(.*?)\//
+        rtn = re.exec(value)
+        if rtn?
+          [dummy, regex] = rtn
+          return new RegExp(regex)
+
+        re = /function\s*[(](.*?)[)].*[{][\n\r\s]*(.*)[}n}r\s]*[}]/
+        rtn = re.exec(value)
+        if rtn?
+          [dummy, name, code] = rtn
+          return new Function(name, code)
+
+      return value
 
   # calls encode on data
   encodeData: () ->
